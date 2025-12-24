@@ -1,80 +1,263 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>TikTok Super Lite</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Menghargai Teman</title>
+
 <style>
-*{
-  box-sizing:border-box;
-  font-family:Arial, sans-serif;
+/* ================= ROOT ================= */
+:root{
+  --bg:#0b0d14;
+  --card:rgba(255,255,255,0.08);
+  --text:#fff;
+  --accent:#00f0ff;
+}
+body.light{
+  --bg:#f4f7fa;
+  --card:rgba(0,0,0,0.06);
+  --text:#fff;
+  --accent:#0a84ff;
 }
 body{
   margin:0;
-  background:#f2f2f2;
+  background:var(--bg) center/cover no-repeat fixed;
+  color:var(--text);
+  font-family:'Poppins',system-ui;
 }
 
-/* HEADER */
-.header{
+/* ================= STATUS BAR ================= */
+.status-bar{
+  position:fixed;top:0;width:100%;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 12px;
+  background:linear-gradient(180deg,rgba(0,0,0,.25),transparent);
+  z-index:100;
+}
+.status-left{display:flex;gap:8px}
+.select-anim,.btn-theme,.about-btn{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  padding:6px 10px;
+  color:var(--text);
+  cursor:pointer;
+}
+
+/* ================= SCREEN ================= */
+.screen{display:none;padding:85px 20px 30px}
+.screen.active{display:block}
+.title{text-align:center;font-size:28px;font-weight:800;color:var(--accent)}
+
+/* ================= INFO CARD ================= */
+.infographic-card{
+  background:var(--card);
+  padding:18px;
+  border-radius:15px;
+  margin-bottom:10px;
+  opacity:0;
+  transform:translateY(12px) scale(.98);
+  transition:.45s;
+  position:relative;
+}
+.infographic-card.show{opacity:1;transform:none}
+.infographic-card.glow::before{
+  content:"";
+  position:absolute;inset:-2px;
+  border-radius:15px;
+  padding:2px;
+  background:linear-gradient(120deg,#ff00ff,#00e1ff,#00ff73,#ffe600,#ff0077);
+  background-size:400% 400%;
+  animation:glow 5s linear infinite;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+}
+@keyframes glow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* ================= BUTTON ================= */
+.btn-main{
+  margin:25px auto;
+  width:80%;
+  padding:14px;
+  text-align:center;
+  border-radius:14px;
+  background:var(--card);
+  cursor:pointer;
+}
+
+/* ================= ABOUT ================= */
+.about-box{
+  background:var(--card);
+  padding:20px;
+  border-radius:15px;
+}
+
+/* ================= RUNNING TEXT ================= */
+.running-wrapper{
   display:flex;
   align-items:center;
-  gap:10px;
-  background:#0095ff;
-  color:white;
-  padding:10px 14px;
+  gap:8px;
+  margin-top:15px;
 }
-.header img{
-  width:32px;
-  height:32px;
-  border-radius:6px;
+.running-boundary{
+  font-weight:bold;
+  font-size:16px;
 }
-.header span{
-  font-weight:600;
-}
-
-/* CONTAINER */
-.container{
-  display:flex;
-  justify-content:center;
-  margin-top:20px;
-}
-
-/* BLACK SCREEN */
-.screen{
-  width:360px;
-  height:640px;
-  background:black;
-  border-radius:30px;
+.running-box{
+  flex:1;
   overflow:hidden;
+  white-space:nowrap;
+}
+.running-text{
+  display:inline-block;
+  padding-left:100%;
+  animation:run 8s linear infinite;
+}
+@keyframes run{
+  from{transform:translateX(0)}
+  to{transform:translateX(-100%)}
+}
+.color-settings,.speed-settings{
+  margin-top:15px;
   display:flex;
+  flex-direction:column;
+  gap:8px;
+  font-size:13px;
+}
+.color-settings input,.speed-settings input{
+  height:35px;
+  border-radius:8px;
+  background:#222;
+  border:1px solid #444;
+  color:white;
 }
 
-/* IFRAME VIDEO */
-.screen iframe{
+/* ================= QUIZ ================= */
+.quiz-card{
+  background:var(--card);
+  padding:20px;
+  border-radius:15px;
+}
+.option{
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.05);
+  cursor:pointer;
+}
+.correct{background:#00c76f}
+.wrong{background:#ff4c5b}
+.progress{
   width:100%;
+  height:8px;
+  background:#222;
+  border-radius:20px;
+  overflow:hidden;
+}
+.progress-fill{
   height:100%;
-  border:none;
+  width:0%;
+  background:var(--accent);
+  transition:.3s;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <!-- LOGO FIX (PNG, AMAN) -->
-  <img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png">
-  <span>TikTok Super Lite (by Thoni Project)</span>
+<div class="status-bar">
+  <div class="status-left">
+    <select id="animSelect" class="select-anim">
+      <option value="fade">Fade</option>
+    </select>
+    <button id="themeBtn" class="btn-theme">Tema</button>
+  </div>
+  <div class="about-btn" onclick="show('about')">About</div>
 </div>
 
-<div class="container">
-  <div class="screen">
-    <!-- STREAMABLE EMBED (WAJIB iframe) -->
-    <iframe 
-      src="https://streamable.com/e/xruugn?autoplay=1&muted=1"
-      allow="autoplay; fullscreen"
-      allowfullscreen>
-    </iframe>
-  </div>
+<!-- HOME -->
+<div class="screen active" id="home">
+<h1 class="title">Menghargai Teman</h1>
+
+<div class="infographic-card glow">Support system paling real</div>
+<div class="infographic-card glow">Respect bikin circle awet</div>
+<div class="infographic-card glow">Anti drama</div>
+
+<div class="btn-main" onclick="show('quiz')">Mulai Kuis</div>
 </div>
+
+<!-- ABOUT -->
+<div class="screen" id="about">
+<div class="about-box">
+<h3>THON-Z</h3>
+<p>Edukasi ringan soal pertemanan sehat.</p>
+
+<div class="running-wrapper">
+  <div class="running-boundary" id="leftBound">[</div>
+  <div class="running-box">
+    <span class="running-text" id="runText">pendoso Pasuruan</span>
+  </div>
+  <div class="running-boundary" id="rightBound">]</div>
+</div>
+
+<div class="color-settings">
+  <label>Warna Teks</label>
+  <input type="color" id="textColor" value="#00eaff">
+  <label>Warna Pembatas</label>
+  <input type="color" id="boundColor" value="#ffffff">
+</div>
+
+<div class="speed-settings">
+  <label>Kecepatan</label>
+  <input type="range" id="speedControl" min="3" max="20" value="8">
+</div>
+
+<div class="btn-main" onclick="show('home')">Kembali</div>
+</div>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="quiz">
+<div class="progress"><div class="progress-fill" id="progress"></div></div>
+<div class="quiz-card">Quiz nanti lanjut</div>
+</div>
+
+<script>
+/* ===== SCREEN ===== */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ===== THEME ===== */
+let light=false;
+themeBtn.onclick=()=>{
+  light=!light;
+  document.body.classList.toggle('light',light);
+}
+
+/* ===== RUNNING TEXT ===== */
+textColor.oninput=()=>runText.style.color=textColor.value;
+boundColor.oninput=()=>{
+  leftBound.style.color=boundColor.value;
+  rightBound.style.color=boundColor.value;
+}
+speedControl.oninput=()=>{
+  runText.style.animationDuration=speedControl.value+'s';
+}
+
+/* ===== ANIMATION SHOW ===== */
+const cards=document.querySelectorAll('.infographic-card');
+const obs=new IntersectionObserver(e=>{
+  e.forEach(x=>x.isIntersecting&&x.target.classList.add('show'));
+},{threshold:.3});
+cards.forEach(c=>obs.observe(c));
+</script>
 
 </body>
-  </html>
+</html>
