@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>TikTok Super Lite</title>
+<style>
+*{
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
+body{
+  margin:0;
+  background:#f2f2f2;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#0095ff;
+  color:white;
+  padding:10px 14px;
+}
+.header img{
+  width:32px;
+  height:32px;
+  border-radius:6px;
+}
+.header span{
+  font-weight:600;
+}
+
+/* CONTAINER */
+.container{
+  display:flex;
+  justify-content:center;
+  margin-top:20px;
+}
+
+/* BLACK SCREEN */
+.screen{
+  width:360px;
+  height:640px;
+  background:black;
+  border-radius:30px;
+  overflow:hidden;
+  display:flex;
+}
+
+/* VIDEO */
+.screen video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <img src="https://streamable.com/xruugn">
+  <span>TikTok Super lite (by Thoni Project)</span>
+</div>
+
+<div class="container">
+  <div class="screen">
+    <video controls autoplay muted loop>
+      <source src="video.mp4" type="video/mp4">
+      Browser lo gak support video.
+    </video>
+  </div>
+</div>
+
+</body>
+</html>
